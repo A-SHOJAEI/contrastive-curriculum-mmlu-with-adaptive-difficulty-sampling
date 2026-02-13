@@ -1,0 +1,93 @@
+# Default configuration for contrastive curriculum MMLU training
+
+# Model configuration
+model:
+  base_model: "sentence-transformers/all-MiniLM-L6-v2"
+  hidden_dim: 384
+  projection_dim: 256
+  num_classes: 57  # Number of MMLU subjects
+  dropout: 0.1
+  pooling_mode: "mean"
+
+# Training configuration
+training:
+  batch_size: 32
+  num_epochs: 20
+  learning_rate: 0.0001
+  warmup_steps: 500
+  weight_decay: 0.01
+  gradient_clip_norm: 1.0
+  early_stopping_patience: 5
+  eval_every_n_steps: 500
+  save_every_n_steps: 1000
+  mixed_precision: true
+
+# Optimizer and scheduler
+optimizer:
+  type: "adamw"
+  betas: [0.9, 0.999]
+  eps: 0.00000001  # 1e-8
+
+scheduler:
+  type: "cosine"
+  num_warmup_steps: 500
+  num_training_steps: 10000
+
+# Contrastive learning configuration
+contrastive:
+  temperature: 0.07
+  use_hard_negatives: true
+  negative_sample_ratio: 3
+  subject_aware_sampling: true
+  embedding_normalize: true
+
+# Curriculum learning configuration
+curriculum:
+  enabled: true
+  strategy: "adaptive_difficulty"
+  initial_difficulty_threshold: 0.3
+  difficulty_update_frequency: 100
+  uncertainty_metric: "entropy"
+  warmup_epochs: 2
+  min_samples_per_task: 5
+  max_samples_per_task: 50
+
+# Data configuration
+data:
+  dataset_name: "cais/mmlu"
+  dataset_split: "all"
+  max_seq_length: 512
+  few_shot_k: 5
+  validation_split: 0.1
+  test_split: 0.2
+  seed: 42
+  num_workers: 4
+
+# Loss weights
+loss:
+  contrastive_weight: 0.5
+  classification_weight: 0.3
+  curriculum_weight: 0.2
+  label_smoothing: 0.1
+
+# Evaluation configuration
+evaluation:
+  metrics: ["accuracy", "f1_macro", "f1_weighted"]
+  per_subject_analysis: true
+  confidence_threshold: 0.5
+
+# Paths
+paths:
+  checkpoint_dir: "checkpoints"
+  results_dir: "results"
+  cache_dir: ".cache"
+
+# Reproducibility
+seed: 42
+
+# MLflow tracking
+mlflow:
+  enabled: true
+  experiment_name: "contrastive-curriculum-mmlu"
+  run_name: "default"
+  tracking_uri: "mlruns"

@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "contrastive-curriculum-mmlu-with-adaptive-difficulty-sampling"
+version = "0.1.0"
+description = "Contrastive representation learning with adaptive curriculum strategies for efficient few-shot learning on MMLU"
+authors = [{name = "Alireza Shojaei"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "torch>=2.0.0",
+    "transformers>=4.35.0",
+    "sentence-transformers>=2.2.0",
+    "datasets>=2.14.0",
+    "evaluate>=0.4.0",
+    "accelerate>=0.24.0",
+    "scikit-learn>=1.3.0",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "pyyaml>=6.0",
+    "tqdm>=4.65.0",
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "mlflow>=2.8.0",
+    "scipy>=1.11.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+]
+
+[project.scripts]
+train-mmlu = "contrastive_curriculum_mmlu_with_adaptive_difficulty_sampling.scripts.train:main"
+evaluate-mmlu = "contrastive_curriculum_mmlu_with_adaptive_difficulty_sampling.scripts.evaluate:main"
+predict-mmlu = "contrastive_curriculum_mmlu_with_adaptive_difficulty_sampling.scripts.predict:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "--cov=src --cov-report=term-missing"
